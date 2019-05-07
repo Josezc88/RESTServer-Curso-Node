@@ -7,7 +7,7 @@ const Usuario = require('../models/usuario');
 
 // usurio: joseluis
 // contraseña MONGODB ATLAS: eh6nEwiAbba9zxI2
-// mongodb+srv://joseluis:<eh6nEwiAbba9zxI2>@cluster0-vz2q4.mongodb.net/cafe
+// mongodb+srv://joseluis:eh6nEwiAbba9zxI2@cluster0-vz2q4.mongodb.net/cafe
 
 app.get('/usuario', function(req, res) {
     // req.query - parametros opcionales
