@@ -4,12 +4,19 @@ const _ = require('underscore'); // _ es un estandar
 
 const app = express();
 const Usuario = require('../models/usuario');
+const { verificarToken, verificarAdminRole } = require('../middlewares/autenticacion');
 
 // usurio: joseluis
 // contraseña MONGODB ATLAS: eh6nEwiAbba9zxI2
 // mongodb+srv://joseluis:eh6nEwiAbba9zxI2@cluster0-vz2q4.mongodb.net/cafe
 
-app.get('/usuario', function(req, res) {
+app.get('/usuario', verificarToken, (req, res) => {
+    // return res.json({
+    //     usuario: req.usuario,
+    //     nombre: req.usuario.nombre,
+    //     email: req.usuario.email
+    // });
+
     // req.query - parametros opcionales
     let desde = Number(req.query.desde) || 0;
     let limite = Number(req.query.limite) || 5;
@@ -35,7 +42,7 @@ app.get('/usuario', function(req, res) {
         });
 });
 
-app.post('/usuario', function(req, res) {
+app.post('/usuario', [verificarToken, verificarAdminRole], (req, res) => {
     let body = req.body;
 
     let usuario = new Usuario({
@@ -61,7 +68,7 @@ app.post('/usuario', function(req, res) {
     });
 });
 
-app.put('/usuario/:id', function(req, res) {
+app.put('/usuario/:id', [verificarToken, verificarAdminRole], (req, res) => {
     let id = req.params.id;
     // Filtrar solo los datos que vamos a permitir modificar
     let body = _.pick(req.body, ['nombre', 'email', 'img', 'role', 'estado']);
@@ -83,9 +90,10 @@ app.put('/usuario/:id', function(req, res) {
     });
 });
 
-app.delete('/usuario/:id', function(req, res) {
+app.delete('/usuario/:id', [verificarToken, verificarAdminRole], (req, res) => {
     // Borrar el registro completamente
     let id = req.params.id;
+    // Eliminar completamente de la DB
     // Usuario.findByIdAndRemove(id, (err, usuarioBorrado) => {
     //     if (err) {
     //         return res.status(400).json({
